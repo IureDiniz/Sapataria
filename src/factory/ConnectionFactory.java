@@ -9,7 +9,7 @@ public class ConnectionFactory {
 	private static final String USERNAME = "root";
 	
 	// Senha do banco
-	private static final String PASSWORD = "";
+	private static final String PASSWORD = "2006";
 			
 	// Caminho do banco de dados, porta, nome do banco de dados
 	private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/dbSapataria";
