@@ -9,5 +9,9 @@ package models;
  * @author iured
  */
 public class Pedido {
-    
+    int ped_codigo;
+    String ped_cliente;
+    int ped_quantidade;
+    double ped_preco_total;
+    int sap_codigo;
 }
