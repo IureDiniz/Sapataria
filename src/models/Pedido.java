@@ -66,5 +66,9 @@ public class Pedido {
     public void setSAP_CODIGO(int SAP_CODIGO) {
         this.SAP_CODIGO = SAP_CODIGO;
     }
+
+    public Date getPED_DATA() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }

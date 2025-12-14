@@ -24,13 +24,9 @@ public class PedidoDAO {
 			// Adiciona os valores esperados pela query
 			pstm.setString(1, pedido.getPED_CLIENTE());
 			pstm.setDate(2, pedido.getPED_DATA());
-<<<<<<< HEAD
                         pstm.setInt(3, pedido.getPED_QUANTIDADE());
-=======
-                        pstm.setInt(3, pedido.getPED_QUANTIADE());
->>>>>>> DaoConnection
                         pstm.setDouble(4, pedido.getPED_PRECO_TOTAL());
-                        pstm.setint(5, pedido.getSAP_CODIGO());
+                        pstm.setInt(5, pedido.getSAP_CODIGO());
 			
 			// Executa a query
 			pstm.execute();
@@ -176,13 +172,9 @@ public class PedidoDAO {
 		// Adiciona os valores para atualizar
 		pstm.setString(1, pedido.getPED_CLIENTE());
 		pstm.setDate(2, pedido.getPED_DATA());
-<<<<<<< HEAD
                 pstm.setInt(3, pedido.getPED_QUANTIDADE());
-=======
-                pstm.setInt(3, pedido.getPED_QUANTIADE());
->>>>>>> DaoConnection
                 pstm.setDouble(4, pedido.getPED_PRECO_TOTAL());
-                pstm.setint(5, pedido.getSAP_CODIGO());
+                pstm.setInt(5, pedido.getSAP_CODIGO());
 		
 		// Executa a query
 		pstm.execute();

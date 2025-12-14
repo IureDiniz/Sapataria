@@ -121,7 +121,7 @@ public class SapatoDAO {
 		pstm.setString(1, sapato.getSAP_NOME());
 		pstm.setString(2, sapato.getSAP_FORNECEDOR());
 		pstm.setDouble(3, sapato.getSAP_PRECO_COMPRA());
-		pstm.setInt(4, sapato.getSAP_PRECO_VENDA());
+		pstm.setDouble(4, sapato.getSAP_PRECO_VENDA());
                 pstm.setInt(5, sapato.getSAP_QUANTIDADE());
 		pstm.setInt(6, sapato.getSAP_CODIGO());
 		
