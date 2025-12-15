@@ -12,7 +12,7 @@ public class TerminalTest {
         boolean continuar = true;
         
         do{
-            System.out.print("Menu Principal\n"
+            System.out.print("\n#####Menu Principal#####\n"
                     + "1 - Sapatos\n"
                     + "2 - Pedidos\n"
                     + "3 - Sair\n"
@@ -30,11 +30,11 @@ public class TerminalTest {
                     continuar = false;
                     break;
                 default:
-                    System.out.println("Escolha invalida");
+                    System.out.println("\nEscolha invalida");
             }
         }while(continuar);
         
-        System.out.println("Programa encerrado");
+        System.out.println("\n#####Programa encerrado#####");
         }catch(Exception e){
             System.out.println("Ocorreu um erro: " + e);
         }
@@ -45,7 +45,7 @@ public class TerminalTest {
         boolean continuar = true;
         
         do{
-            System.out.print("Menu Sapatos\n"
+            System.out.print("\n#####Menu Sapatos#####\n"
                     + "1 - Inserir sapato\n"
                     + "2 - Consultar sapato\n"
                     + "3 - Modificar sapato\n"
@@ -86,7 +86,7 @@ public class TerminalTest {
         boolean continuar = true;
         
         do{
-            System.out.print("Menu Pedidos\n"
+            System.out.print("\n#####Menu Pedidos#####\n"
                     + "1 - Inserir Pedido\n"
                     + "2 - Consultar Pedido\n"
                     + "3 - Modificar Pedido\n"
@@ -148,24 +148,41 @@ public class TerminalTest {
         System.out.print("Digite o código do sapato: ");
         int codigo = leitor. nextInt();
         
-        Sapato s = new Sapato();
+        Sapato sapatoAntigo = SapatoDAO.getSapato(codigo);
+        Sapato sapatoNovo = new Sapato();
         
+        String escolha;
+        do{
+            System.out.println("Deseja modificar esse sapato (S/N) : ");
+            System.out.println(sapatoAntigo.toString());
+            System.out.print("Sua respsota: ");
+            escolha = leitor.next();
+
+            if(String.valueOf(escolha.charAt(0)).equalsIgnoreCase("N")){
+                return;
+            }else if(!String.valueOf(escolha.charAt(0)).equalsIgnoreCase("S")){
+                System.out.println("Valor invalido");
+            }
+        }while(!String.valueOf(escolha.charAt(0)).equalsIgnoreCase("S"));
+        
+        
+        sapatoNovo.setSAP_CODIGO(codigo);
         System.out.print("Digite o novo nome do sapato: ");
-        s.setSAP_NOME(leitor.nextLine());
+        sapatoNovo.setSAP_NOME(leitor.next());
         
         System.out.print("Digite o novo fornecedor do sapato: ");
-        s.setSAP_FORNECEDOR(leitor.nextLine());
+        sapatoNovo.setSAP_FORNECEDOR(leitor.next());
         
         System.out.print("Digite o novo preço de compra do sapato: ");
-        s.setSAP_PRECO_COMPRA(leitor.nextDouble());
+        sapatoNovo.setSAP_PRECO_COMPRA(leitor.nextDouble());
         
         System.out.print("Digite o novo preço de venda do sapato: ");
-        s.setSAP_PRECO_VENDA(leitor.nextDouble());
+        sapatoNovo.setSAP_PRECO_VENDA(leitor.nextDouble());
         
         System.out.print("Digite a nova quantidade do sapato: ");
-        s.setSAP_QUANTIDADE(leitor.nextInt());
+        sapatoNovo.setSAP_QUANTIDADE(leitor.nextInt());
         
-        SapatoDAO.updateSapato(s);
+        SapatoDAO.updateSapato(sapatoNovo);
     }
     
     private static void deletarSapato(){
@@ -173,8 +190,21 @@ public class TerminalTest {
         System.out.print("Digite o código do sapato: ");
         int codigo = leitor. nextInt();
         
-        Sapato s = new Sapato();
-        s.setSAP_CODIGO(codigo);
+        Sapato s = SapatoDAO.getSapato(codigo);
+        
+         String escolha;
+        do{
+            System.out.println("Deseja excluir esse sapato (S/N) : ");
+            System.out.println(s.toString());
+            System.out.print("Sua respsota: ");
+            escolha = leitor.next();
+
+            if(String.valueOf(escolha.charAt(0)).equalsIgnoreCase("N")){
+                return;
+            }else if(!String.valueOf(escolha.charAt(0)).equalsIgnoreCase("S")){
+                System.out.println("Valor invalido");
+            }
+        }while(!String.valueOf(escolha.charAt(0)).equalsIgnoreCase("S"));
         
         SapatoDAO.deleteSapato(s);
     }
