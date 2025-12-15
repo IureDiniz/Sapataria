@@ -1,15 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package models;
 
+import dao.SapatoDAO;
 import java.sql.Date;
 
-/**
- *
- * @author iured
- */
 public class Pedido {
     private int PED_CODIGO;
     private String PED_CLIENTE;
@@ -71,4 +64,15 @@ public class Pedido {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+    public String toString(){
+        Sapato s = SapatoDAO.getSapato(this.PED_CODIGO);
+        String m = "Código: " + this.PED_CLIENTE + "\n"
+                + "Cliente: " + this.PED_CLIENTE + "\n"
+                + "Sapato: " + s.getSAP_NOME() + "\n"
+                + "Quantidade: " + this.PED_QUANTIDADE + "\n"
+                + "Preço total: " + this.PED_PRECO_TOTAL + "\n"
+                + "Data: " + this.PED_DATA + "\n";
+        
+        return m;
+    }
 }

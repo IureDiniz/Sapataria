@@ -1,17 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package models;
 
 import static dao.PedidoDAO.listPedido;
 import static dao.SapatoDAO.getSapato;
 import java.util.List;
 
-/**
- *
- * @author iured
- */
 public class Sapato {
 
     private int SAP_CODIGO;
@@ -92,5 +84,14 @@ public class Sapato {
         this.SAP_QUANTIDADE = SAP_QUANTIDADE;
     }
     
-    
+    public String toString(){
+        String m = "Código: " + this.SAP_CODIGO + "\n"
+                + "Nome: " + this.SAP_NOME + "\n"
+                + "Fornecedor: " + this.SAP_FORNECEDOR + "\n"
+                + "Preço de compra: " + this.SAP_PRECO_COMPRA + "\n"
+                + "Preço de vanda: " + this.SAP_PRECO_VENDA + "\n"
+                + "Quantidade: " + this.SAP_QUANTIDADE + "\n";
+        
+        return m;
+    }
 }
