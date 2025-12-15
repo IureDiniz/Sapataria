@@ -105,7 +105,7 @@ public class SapatoDAO {
 	}
 	
 	public static void updateSapato(Sapato sapato) {
-	String sql = "UPDATE tbSapato SET SAP_NOME = ?, SAP_FORNECEDOR = ?, SAP_PRECO_COMPRA = ?, SAP_PRECO_VENDA = ?, SAP_QUANTIDADE WHERE PRO_CODIGO = ?";
+	String sql = "UPDATE tbSapato SET SAP_NOME = ?, SAP_FORNECEDOR = ?, SAP_PRECO_COMPRA = ?, SAP_PRECO_VENDA = ?, SAP_QUANTIDADE = ? WHERE SAP_CODIGO = ?";
 	
 	Connection conn = null;
 	JdbcPreparedStatement pstm = null;
