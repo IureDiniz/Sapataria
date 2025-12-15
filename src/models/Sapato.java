@@ -13,7 +13,7 @@ public class Sapato {
     private double SAP_PRECO_VENDA;
     private int SAP_QUANTIDADE;
     
-    public boolean existeSapato(int idSapato){
+    public static boolean existeSapato(int idSapato){
         if(getSapato(idSapato) != null){
             return true;
         }else{

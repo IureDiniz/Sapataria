@@ -245,7 +245,7 @@ public class PedidoDAO {
 				
 				// Recuperar os atributos
 				pedido.setPED_CODIGO(rset.getInt("PED_CODIGO"));
-				pedido.setPED_CLIENTE(rset.getString("CLIENTE"));
+				pedido.setPED_CLIENTE(rset.getString("PED_CLIENTE"));
 				pedido.setPED_DATA(rset.getDate("PED_DATA"));
                                 pedido.setPED_QUANTIDADE(rset.getInt("PED_QUANTIDADE"));
                                 pedido.setPED_PRECO_TOTAL(rset.getDouble("PED_PRECO_TOTAL"));

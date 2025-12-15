@@ -1,8 +1,12 @@
 package TerminalTest;
 
+import dao.PedidoDAO;
 import dao.SapatoDAO;
+import java.time.LocalDate;
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.Scanner;
+import models.Pedido;
 import models.Sapato;
 
 public class TerminalTest {
@@ -238,6 +242,39 @@ public class TerminalTest {
     
     private static void inserirPedido(){
         Scanner leitor = new Scanner(System.in);
+        Pedido p = new Pedido();
+        Sapato s;
+        
+        System.out.print("Digite o código do sapato: ");
+        p.setSAP_CODIGO(leitor.nextInt());
+        
+        if(Sapato.existeSapato(p.getSAP_CODIGO())){
+            s = SapatoDAO.getSapato(p.getSAP_CODIGO());
+        }else{
+            System.out.println("Sapato inexistente");
+            return;
+        }
+        
+        
+        System.out.print("Digite o nome cliente: ");
+        p.setPED_CLIENTE(leitor.next());
+        
+        System.out.print("Digite a quantidade de pares vendidos: ");
+        p.setPED_QUANTIDADE(leitor.nextInt());
+        
+        if(s.possuiEstoque(p.getSAP_CODIGO(), p.getPED_QUANTIDADE())){
+             p.setPED_PRECO_TOTAL(p.getPED_QUANTIDADE() * s.getSAP_PRECO_VENDA());
+             s.setSAP_QUANTIDADE(s.getSAP_QUANTIDADE() - p.getPED_QUANTIDADE());
+             SapatoDAO.updateSapato(s);
+        }else{
+            System.out.println("Quantidade em estoque insuficiente");
+            return;
+        }
+        
+        LocalDate dataAtual = LocalDate.now();
+        p.setPED_DATA(Date.valueOf(dataAtual));
+        
+        PedidoDAO.savePedido(p);
     }
     
     private static void modificarPedido(){
@@ -254,5 +291,8 @@ public class TerminalTest {
     
     private static void listarPedido(){
         Scanner leitor = new Scanner(System.in);
+        for(Pedido p : PedidoDAO.listPedido()){
+            System.out.println(p.toString());
+        }
     }
 }
