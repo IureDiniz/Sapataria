@@ -128,7 +128,7 @@ public class PainelPedidosLista extends javax.swing.JPanel {
             
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;
+                return column == 6; // Apenas coluna de Ações é editável
             }
         });
         jScrollPane1.setViewportView(tablePedidos);

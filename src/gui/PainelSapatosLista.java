@@ -128,7 +128,7 @@ public class PainelSapatosLista extends javax.swing.JPanel {
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;
+                return column == 6; // Apenas coluna de Ações é editável
             }
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
