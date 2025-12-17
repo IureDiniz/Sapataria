@@ -18,6 +18,46 @@ public class IndexFrame extends javax.swing.JFrame {
     public IndexFrame() {
         initComponents();
         setLocationRelativeTo(null);
+        
+        // Mostrar painel de lista de pedidos por padrão
+        java.awt.CardLayout clPedidos = (java.awt.CardLayout) painelPedidos.getLayout();
+        clPedidos.show(painelPedidos, "card2");
+        
+        // Mostrar painel de lista de sapatos por padrão
+        java.awt.CardLayout clSapatos = (java.awt.CardLayout) painelSapatos.getLayout();
+        clSapatos.show(painelSapatos, "card2");
+        
+        // Adicionar listener ao botão "Novo Pedido"
+        painelPedidosLista1.getBtnCriarPedido().addActionListener(e -> {
+            System.out.println("Botão 'Novo Pedido' clicado!");
+            clPedidos.show(painelPedidos, "card3");
+            painelPedidos.revalidate();
+            painelPedidos.repaint();
+        });
+        
+        // Adicionar listener ao botão "Voltar" do formulário de pedidos
+        painelPedidosForm1.getBtnVoltar().addActionListener(e -> {
+            System.out.println("Botão 'Voltar' clicado!");
+            clPedidos.show(painelPedidos, "card2");
+            painelPedidos.revalidate();
+            painelPedidos.repaint();
+        });
+        
+        // Adicionar listener ao botão "Novo Sapato"
+        painelSapatosLista1.getBtnCriarSapato().addActionListener(e -> {
+            System.out.println("Botão 'Novo Sapato' clicado!");
+            clSapatos.show(painelSapatos, "card1");
+            painelSapatos.revalidate();
+            painelSapatos.repaint();
+        });
+        
+        // Adicionar listener ao botão "Voltar" do formulário de sapatos
+        painelSapatosForm1.getBtnVoltarSapatos().addActionListener(e -> {
+            System.out.println("Botão 'Voltar Sapatos' clicado!");
+            clSapatos.show(painelSapatos, "card2");
+            painelSapatos.revalidate();
+            painelSapatos.repaint();
+        });
     }
 
     /**
@@ -29,245 +69,49 @@ public class IndexFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane2 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        pnlPedidos = new javax.swing.JPanel();
-        btnCriarPedido = new javax.swing.JButton();
-        campoBuscaPedidos = new javax.swing.JTextField();
-        btnBuscaPedidos = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        lblPedidos = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
-        pnlSapatos = new javax.swing.JPanel();
-        btnCriarSapato = new javax.swing.JButton();
-        campoBuscaSapato = new javax.swing.JTextField();
-        btnBuscarSapato = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JSeparator();
-        javax.swing.JLabel lblSapatos = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        abas = new javax.swing.JTabbedPane();
+        painelPedidos = new javax.swing.JPanel();
+        painelPedidosForm1 = new gui.PainelPedidosForm();
+        painelPedidosLista1 = new gui.PainelPedidosLista();
+        painelSapatos = new javax.swing.JPanel();
+        painelSapatosForm1 = new gui.PainelSapatosForm();
+        painelSapatosLista1 = new gui.PainelSapatosLista();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnCriarPedido.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/icons/add.png"))); // NOI18N
-        btnCriarPedido.setText("Criar pedido");
+        painelPedidos.setLayout(new java.awt.CardLayout());
 
-        campoBuscaPedidos.setColumns(35);
+        painelPedidosForm1.setPreferredSize(new java.awt.Dimension(881, 446));
+        painelPedidos.add(painelPedidosForm1, "card3");
 
-        btnBuscaPedidos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/icons/pesquisar.png"))); // NOI18N
-        btnBuscaPedidos.setText("Buscar");
+        painelPedidosLista1.setPreferredSize(new java.awt.Dimension(881, 446));
+        painelPedidos.add(painelPedidosLista1, "card2");
 
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        jSeparator1.setToolTipText("");
+        abas.addTab("Pedidos", painelPedidos);
 
-        javax.swing.GroupLayout pnlPedidosLayout = new javax.swing.GroupLayout(pnlPedidos);
-        pnlPedidos.setLayout(pnlPedidosLayout);
-        pnlPedidosLayout.setHorizontalGroup(
-            pnlPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlPedidosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(campoBuscaPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnBuscaPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCriarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        pnlPedidosLayout.setVerticalGroup(
-            pnlPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlPedidosLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(campoBuscaPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                .addGap(6, 6, 6))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPedidosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnCriarPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnBuscaPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-            .addComponent(jSeparator1)
-        );
+        painelSapatos.setLayout(new java.awt.CardLayout());
 
-        lblPedidos.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        lblPedidos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPedidos.setText("Listagem de Pedidos");
+        painelSapatosForm1.setPreferredSize(new java.awt.Dimension(881, 446));
+        painelSapatos.add(painelSapatosForm1, "card1");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "Código", "Cliente", "Data", "Quantidade", "Preço Total", "Sapato", "Ações"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
-            };
+        painelSapatosLista1.setPreferredSize(new java.awt.Dimension(881, 446));
+        painelSapatos.add(painelSapatosLista1, "card2");
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblPedidos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnlPedidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblPedidos)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jTabbedPane2.addTab("Pedidos", jPanel1);
-
-        btnCriarSapato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/icons/add.png"))); // NOI18N
-        btnCriarSapato.setText("Criar sapato");
-        btnCriarSapato.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCriarSapatoActionPerformed(evt);
-            }
-        });
-
-        campoBuscaSapato.setColumns(35);
-        campoBuscaSapato.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                campoBuscaSapatoActionPerformed(evt);
-            }
-        });
-
-        btnBuscarSapato.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/icons/pesquisar.png"))); // NOI18N
-        btnBuscarSapato.setText("Buscar");
-
-        jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        jSeparator2.setToolTipText("");
-
-        javax.swing.GroupLayout pnlSapatosLayout = new javax.swing.GroupLayout(pnlSapatos);
-        pnlSapatos.setLayout(pnlSapatosLayout);
-        pnlSapatosLayout.setHorizontalGroup(
-            pnlSapatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlSapatosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(campoBuscaSapato, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnBuscarSapato, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCriarSapato, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        pnlSapatosLayout.setVerticalGroup(
-            pnlSapatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlSapatosLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(campoBuscaSapato, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
-                .addGap(6, 6, 6))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSapatosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlSapatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(btnCriarSapato, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnBuscarSapato, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-            .addComponent(jSeparator2)
-        );
-
-        lblSapatos.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
-        lblSapatos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSapatos.setText("Listagem de Sapatos");
-
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "Código", "Nome", "Fornecedor", "Preço de compra", "Preço de venda", "Quantidade", "Ações"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        jScrollPane2.setViewportView(jTable2);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlSapatos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblSapatos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnlSapatos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblSapatos)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jTabbedPane2.addTab("Sapatos", jPanel2);
+        abas.addTab("Sapatos", painelSapatos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 881, Short.MAX_VALUE)
+            .addComponent(abas)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(abas, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void campoBuscaSapatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campoBuscaSapatoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_campoBuscaSapatoActionPerformed
-
-    private void btnCriarSapatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCriarSapatoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCriarSapatoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -295,23 +139,12 @@ public class IndexFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBuscaPedidos;
-    private javax.swing.JButton btnBuscarSapato;
-    private javax.swing.JButton btnCriarPedido;
-    private javax.swing.JButton btnCriarSapato;
-    private javax.swing.JTextField campoBuscaPedidos;
-    private javax.swing.JTextField campoBuscaSapato;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JLabel lblPedidos;
-    private javax.swing.JPanel pnlPedidos;
-    private javax.swing.JPanel pnlSapatos;
+    private javax.swing.JTabbedPane abas;
+    private javax.swing.JPanel painelPedidos;
+    private gui.PainelPedidosForm painelPedidosForm1;
+    private gui.PainelPedidosLista painelPedidosLista1;
+    private javax.swing.JPanel painelSapatos;
+    private gui.PainelSapatosForm painelSapatosForm1;
+    private gui.PainelSapatosLista painelSapatosLista1;
     // End of variables declaration//GEN-END:variables
 }

@@ -4,6 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/Users/gerlandoprado/NetBeansProjects/Sapataria/src/gui/IndexFrame.java</file>
+            <file>file:/Users/gerlandoprado/NetBeansProjects/Sapataria/src/gui/PainelPedidosLista.java</file>
+            <file>file:/Users/gerlandoprado/NetBeansProjects/Sapataria/src/gui/PainelPedidosForm.java</file>
+            <file>file:/Users/gerlandoprado/NetBeansProjects/Sapataria/src/gui/PainelSapatosForm.java</file>
+            <file>file:/Users/gerlandoprado/NetBeansProjects/Sapataria/src/gui/PainelSapatosLista.java</file>
         </group>
     </open-files>
 </project-private>
