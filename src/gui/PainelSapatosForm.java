@@ -4,6 +4,10 @@
  */
 package gui;
 
+import dao.SapatoDAO;
+import models.Sapato;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author gerlandoprado
@@ -166,5 +170,59 @@ public class PainelSapatosForm extends javax.swing.JPanel {
 
     public javax.swing.JButton getBtnLimparSapato() {
         return btnLimparSapato;
+    }
+
+    public void salvarSapato() {
+        try {
+            // Validar campos
+            if (txtNome.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha o nome do sapato!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (txtFornecedor.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha o fornecedor!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (txtPrecoCompra.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha o preço de compra!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (txtPrecoVenda.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha o preço de venda!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (txtQuantidade.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha a quantidade!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Criar objeto Sapato
+            Sapato sapato = new Sapato();
+            sapato.setSAP_NOME(txtNome.getText());
+            sapato.setSAP_FORNECEDOR(txtFornecedor.getText());
+            sapato.setSAP_PRECO_COMPRA(Double.parseDouble(txtPrecoCompra.getText()));
+            sapato.setSAP_PRECO_VENDA(Double.parseDouble(txtPrecoVenda.getText()));
+            sapato.setSAP_QUANTIDADE(Integer.parseInt(txtQuantidade.getText()));
+
+            // Salvar no banco
+            SapatoDAO sapatoDAO = new SapatoDAO();
+            sapatoDAO.saveSapato(sapato);
+
+            JOptionPane.showMessageDialog(this, "Sapato salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            limparCampos();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Formato inválido! Verifique preços e quantidade.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    public void limparCampos() {
+        txtNome.setText("");
+        txtFornecedor.setText("");
+        txtPrecoCompra.setText("");
+        txtPrecoVenda.setText("");
+        txtQuantidade.setText("");
     }
 }

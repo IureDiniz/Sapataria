@@ -4,6 +4,17 @@
  */
 package gui;
 
+import dao.PedidoDAO;
+import models.Pedido;
+import javax.swing.JOptionPane;
+import java.sql.Date;
+import dao.SapatoDAO;
+import models.Sapato;
+import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 /**
  *
  * @author gerlandoprado
@@ -15,6 +26,7 @@ public class PainelPedidosForm extends javax.swing.JPanel {
      */
     public PainelPedidosForm() {
         initComponents();
+        carregarSapatos();
     }
 
     /**
@@ -167,5 +179,103 @@ public class PainelPedidosForm extends javax.swing.JPanel {
 
     public javax.swing.JButton getBtnVoltar() {
         return btnVoltarPedidos;
+    }
+
+    public javax.swing.JButton getBtnSalvarPedido() {
+        return btnSalvarPedido;
+    }
+
+    public javax.swing.JButton getBtnLimparPedido() {
+        return btnLimparPedido;
+    }
+
+    public void salvarPedido() {
+        try {
+            // Validar campos
+            if (txtCliente.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha o nome do cliente!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (txtData.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha a data!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (txtQuantidade.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha a quantidade!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (txtPrecoTotal.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, preencha o preço total!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (cmbSapato.getSelectedIndex() <= 0) {
+                JOptionPane.showMessageDialog(this, "Por favor, selecione um sapato!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Criar objeto Pedido
+            Pedido pedido = new Pedido();
+            pedido.setPED_CLIENTE(txtCliente.getText());
+            
+            // Converter data com múltiplos formatos aceitos
+            Date dataPedido = converterData(txtData.getText());
+            pedido.setPED_DATA(dataPedido);
+            
+            pedido.setPED_QUANTIDADE(Integer.parseInt(txtQuantidade.getText()));
+            pedido.setPED_PRECO_TOTAL(Double.parseDouble(txtPrecoTotal.getText()));
+            
+            // Extrair SAP_CODIGO do combo box (formato: "CODIGO - NOME")
+            String selectedItem = (String) cmbSapato.getSelectedItem();
+            int sapCodigo = Integer.parseInt(selectedItem.split(" - ")[0]);
+            pedido.setSAP_CODIGO(sapCodigo);
+
+            // Salvar no banco
+            PedidoDAO pedidoDAO = new PedidoDAO();
+            pedidoDAO.savePedido(pedido);
+
+            JOptionPane.showMessageDialog(this, "Pedido salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            limparCampos();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Formato inválido! Verifique quantidade, preço e data (use dd/MM/yyyy).", "Erro", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private Date converterData(String dataStr) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        
+        try {
+            LocalDate localDate = LocalDate.parse(dataStr, formatter);
+            return Date.valueOf(localDate);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Formato de data inválido! Use dd/MM/yyyy (ex: 17/12/2025)");
+        }
+    }
+
+    public void limparCampos() {
+        txtCliente.setText("");
+        txtData.setText("");
+        txtQuantidade.setText("");
+        txtPrecoTotal.setText("");
+        cmbSapato.setSelectedIndex(0);
+    }
+
+    public void carregarSapatos() {
+        try {
+            cmbSapato.removeAllItems();
+            SapatoDAO sapatoDAO = new SapatoDAO();
+            List<Sapato> sapatos = sapatoDAO.listSapato();
+            
+            cmbSapato.addItem("Selecione um sapato");
+            
+            for (Sapato sapato : sapatos) {
+                cmbSapato.addItem(sapato.getSAP_CODIGO() + " - " + sapato.getSAP_NOME());
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar sapatos: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

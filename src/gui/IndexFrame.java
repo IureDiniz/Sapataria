@@ -42,6 +42,29 @@ public class IndexFrame extends javax.swing.JFrame {
             painelPedidos.revalidate();
             painelPedidos.repaint();
         });
+
+        // Adicionar listener ao botão "Salvar Pedido"
+        painelPedidosForm1.getBtnSalvarPedido().addActionListener(e -> {
+            System.out.println("Botão 'Salvar Pedido' clicado!");
+            painelPedidosForm1.salvarPedido();
+            painelPedidosLista1.carregarPedidos();
+            clPedidos.show(painelPedidos, "card2");
+            painelPedidos.revalidate();
+            painelPedidos.repaint();
+        });
+
+        // Adicionar listener ao botão "Limpar Pedido"
+        painelPedidosForm1.getBtnLimparPedido().addActionListener(e -> {
+            System.out.println("Botão 'Limpar Pedido' clicado!");
+            painelPedidosForm1.limparCampos();
+        });
+
+        // Adicionar listener ao botão "Buscar Pedidos"
+        painelPedidosLista1.getBtnBuscaPedidos().addActionListener(e -> {
+            System.out.println("Botão 'Buscar Pedidos' clicado!");
+            String termo = painelPedidosLista1.getCampoBuscaPedidos().getText();
+            painelPedidosLista1.buscarPedidos(termo);
+        });
         
         // Adicionar listener ao botão "Novo Sapato"
         painelSapatosLista1.getBtnCriarSapato().addActionListener(e -> {
@@ -57,6 +80,29 @@ public class IndexFrame extends javax.swing.JFrame {
             clSapatos.show(painelSapatos, "card2");
             painelSapatos.revalidate();
             painelSapatos.repaint();
+        });
+
+        // Adicionar listener ao botão "Salvar Sapato"
+        painelSapatosForm1.getBtnSalvarSapato().addActionListener(e -> {
+            System.out.println("Botão 'Salvar Sapato' clicado!");
+            painelSapatosForm1.salvarSapato();
+            painelSapatosLista1.carregarSapatos();
+            clSapatos.show(painelSapatos, "card2");
+            painelSapatos.revalidate();
+            painelSapatos.repaint();
+        });
+
+        // Adicionar listener ao botão "Limpar Sapato"
+        painelSapatosForm1.getBtnLimparSapato().addActionListener(e -> {
+            System.out.println("Botão 'Limpar Sapato' clicado!");
+            painelSapatosForm1.limparCampos();
+        });
+
+        // Adicionar listener ao botão "Buscar Sapatos"
+        painelSapatosLista1.getBtnBuscarSapato().addActionListener(e -> {
+            System.out.println("Botão 'Buscar Sapatos' clicado!");
+            String termo = painelSapatosLista1.getCampoBuscaSapato().getText();
+            painelSapatosLista1.buscarSapatos(termo);
         });
     }
 

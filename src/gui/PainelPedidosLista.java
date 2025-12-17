@@ -4,6 +4,11 @@
  */
 package gui;
 
+import dao.PedidoDAO;
+import models.Pedido;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+
 /**
  *
  * @author gerlandoprado
@@ -15,6 +20,23 @@ public class PainelPedidosLista extends javax.swing.JPanel {
      */
     public PainelPedidosLista() {
         initComponents();
+        carregarPedidos();
+        configurarColunas();
+    }
+
+    private void configurarColunas() {
+        // Cliente (coluna 1) com largura maior
+        tablePedidos.getColumnModel().getColumn(1).setPreferredWidth(150);
+        // Data (coluna 2)
+        tablePedidos.getColumnModel().getColumn(2).setPreferredWidth(80);
+        // Quantidade (coluna 3)
+        tablePedidos.getColumnModel().getColumn(3).setPreferredWidth(80);
+        // Preço Total (coluna 4)
+        tablePedidos.getColumnModel().getColumn(4).setPreferredWidth(90);
+        // Sapato (coluna 5)
+        tablePedidos.getColumnModel().getColumn(5).setPreferredWidth(80);
+        // Ações (coluna 6)
+        tablePedidos.getColumnModel().getColumn(6).setPreferredWidth(80);
     }
 
     /**
@@ -165,5 +187,68 @@ public class PainelPedidosLista extends javax.swing.JPanel {
 
     public javax.swing.JTextField getCampoBuscaPedidos() {
         return campoBuscaPedidos;
+    }
+
+    public void carregarPedidos() {
+        try {
+            PedidoDAO pedidoDAO = new PedidoDAO();
+            List<Pedido> pedidos = pedidoDAO.listPedido();
+            
+            DefaultTableModel model = (DefaultTableModel) tablePedidos.getModel();
+            model.setRowCount(0); // Limpa linhas anteriores
+            
+            for (Pedido pedido : pedidos) {
+                Object[] row = {
+                    pedido.getPED_CODIGO(),
+                    pedido.getPED_CLIENTE(),
+                    pedido.getPED_DATA(),
+                    pedido.getPED_QUANTIDADE(),
+                    String.format("%.2f", pedido.getPED_PRECO_TOTAL()),
+                    pedido.getSAP_CODIGO(),
+                    "Ações"
+                };
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar pedidos: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void buscarPedidos(String termo) {
+        try {
+            DefaultTableModel model = (DefaultTableModel) tablePedidos.getModel();
+            model.setRowCount(0);
+            
+            if (termo == null || termo.isEmpty()) {
+                carregarPedidos();
+                lblPedidos.setText("Listagem de Pedidos");
+                return;
+            }
+            
+            // Filtrar pedidos por cliente
+            PedidoDAO pedidoDAO = new PedidoDAO();
+            List<Pedido> pedidos = pedidoDAO.listPedido();
+            
+            for (Pedido pedido : pedidos) {
+                if (pedido.getPED_CLIENTE().toLowerCase().contains(termo.toLowerCase())) {
+                    Object[] row = {
+                        pedido.getPED_CODIGO(),
+                        pedido.getPED_CLIENTE(),
+                        pedido.getPED_DATA(),
+                        pedido.getPED_QUANTIDADE(),
+                        String.format("%.2f", pedido.getPED_PRECO_TOTAL()),
+                        pedido.getSAP_CODIGO(),
+                        "Ações"
+                    };
+                    model.addRow(row);
+                }
+            }
+            
+            lblPedidos.setText("Resultados de busca para: " + termo);
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar pedidos: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

@@ -4,6 +4,11 @@
  */
 package gui;
 
+import dao.SapatoDAO;
+import models.Sapato;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+
 /**
  *
  * @author gerlandoprado
@@ -15,6 +20,23 @@ public class PainelSapatosLista extends javax.swing.JPanel {
      */
     public PainelSapatosLista() {
         initComponents();
+        carregarSapatos();
+        configurarColunas();
+    }
+
+    private void configurarColunas() {
+        // Nome (coluna 1) com largura maior
+        tableSapatos.getColumnModel().getColumn(1).setPreferredWidth(150);
+        // Fornecedor (coluna 2)
+        tableSapatos.getColumnModel().getColumn(2).setPreferredWidth(120);
+        // Preço Compra (coluna 3)
+        tableSapatos.getColumnModel().getColumn(3).setPreferredWidth(90);
+        // Preço Venda (coluna 4)
+        tableSapatos.getColumnModel().getColumn(4).setPreferredWidth(90);
+        // Quantidade (coluna 5)
+        tableSapatos.getColumnModel().getColumn(5).setPreferredWidth(80);
+        // Ações (coluna 6)
+        tableSapatos.getColumnModel().getColumn(6).setPreferredWidth(80);
     }
 
     /**
@@ -32,7 +54,7 @@ public class PainelSapatosLista extends javax.swing.JPanel {
         campoBuscaSapato = new javax.swing.JTextField();
         btnBuscarSapato = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
-        javax.swing.JLabel lblSapatos = new javax.swing.JLabel();
+        lblSapatos = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableSapatos = new javax.swing.JTable();
 
@@ -166,6 +188,7 @@ public class PainelSapatosLista extends javax.swing.JPanel {
     private javax.swing.JTextField campoBuscaSapato;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel lblSapatos;
     private javax.swing.JPanel painelSapatos;
     private javax.swing.JTable tableSapatos;
     // End of variables declaration//GEN-END:variables
@@ -184,5 +207,66 @@ public class PainelSapatosLista extends javax.swing.JPanel {
 
     public javax.swing.JTextField getCampoBuscaSapato() {
         return campoBuscaSapato;
+    }
+
+    public void carregarSapatos() {
+        try {
+            SapatoDAO sapatoDAO = new SapatoDAO();
+            List<Sapato> sapatos = sapatoDAO.listSapato();
+            
+            DefaultTableModel model = (DefaultTableModel) tableSapatos.getModel();
+            model.setRowCount(0); // Limpa linhas anteriores
+            
+            for (Sapato sapato : sapatos) {
+                Object[] row = {
+                    sapato.getSAP_CODIGO(),
+                    sapato.getSAP_NOME(),
+                    sapato.getSAP_FORNECEDOR(),
+                    String.format("%.2f", sapato.getSAP_PRECO_COMPRA()),
+                    String.format("%.2f", sapato.getSAP_PRECO_VENDA()),
+                    sapato.getSAP_QUANTIDADE(),
+                    "Ações"
+                };
+                model.addRow(row);
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar sapatos: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void buscarSapatos(String termo) {
+        try {
+            DefaultTableModel model = (DefaultTableModel) tableSapatos.getModel();
+            model.setRowCount(0);
+            
+            if (termo == null || termo.isEmpty()) {
+                carregarSapatos();
+                lblSapatos.setText("Listagem de Sapatos");
+                return;
+            }
+            
+            // Buscar sapatos por nome usando o DAO
+            SapatoDAO sapatoDAO = new SapatoDAO();
+            List<Sapato> sapatos = sapatoDAO.listSapato(termo);
+            
+            for (Sapato sapato : sapatos) {
+                Object[] row = {
+                    sapato.getSAP_CODIGO(),
+                    sapato.getSAP_NOME(),
+                    sapato.getSAP_FORNECEDOR(),
+                    String.format("%.2f", sapato.getSAP_PRECO_COMPRA()),
+                    String.format("%.2f", sapato.getSAP_PRECO_VENDA()),
+                    sapato.getSAP_QUANTIDADE(),
+                    "Ações"
+                };
+                model.addRow(row);
+            }
+            
+            lblSapatos.setText("Resultados de busca para: " + termo);
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar sapatos: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
