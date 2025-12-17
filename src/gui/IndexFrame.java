@@ -17,35 +17,46 @@ public class IndexFrame extends javax.swing.JFrame {
      */
     public IndexFrame() {
         initComponents();
-        setLocationRelativeTo(null);
         
-        // Mostrar painel de lista de pedidos por padrão
+        painelPedidosLista1 = new PainelPedidosLista();
+        painelPedidosForm1 = new PainelPedidosForm();
+        painelSapatosLista1 = new PainelSapatosLista();
+        painelSapatosForm1 = new PainelSapatosForm();
+        
+        // Adicionar as cartas do CardLayout de Pedidos
+        painelPedidos.add(painelPedidosForm1, "card3");
+        painelPedidos.add(painelPedidosLista1, "card2");
+        
+        // Adicionar as cartas do CardLayout de Sapatos
+        painelSapatos.add(painelSapatosForm1, "card1");
+        painelSapatos.add(painelSapatosLista1, "card2");
+        
+        setLocationRelativeTo(null);
+        setSize(900, 520);
+        
         java.awt.CardLayout clPedidos = (java.awt.CardLayout) painelPedidos.getLayout();
         clPedidos.show(painelPedidos, "card2");
         
-        // Mostrar painel de lista de sapatos por padrão
         java.awt.CardLayout clSapatos = (java.awt.CardLayout) painelSapatos.getLayout();
         clSapatos.show(painelSapatos, "card2");
         
-        // Adicionar listener ao botão "Novo Pedido"
+        painelPedidosLista1.configurarReferencias(painelPedidos, painelPedidosForm1);
+        painelSapatosLista1.configurarReferencias(painelSapatos, painelSapatosForm1);
+        
         painelPedidosLista1.getBtnCriarPedido().addActionListener(e -> {
-            System.out.println("Botão 'Novo Pedido' clicado!");
+            painelPedidosForm1.limparCampos();
             clPedidos.show(painelPedidos, "card3");
             painelPedidos.revalidate();
             painelPedidos.repaint();
         });
         
-        // Adicionar listener ao botão "Voltar" do formulário de pedidos
         painelPedidosForm1.getBtnVoltar().addActionListener(e -> {
-            System.out.println("Botão 'Voltar' clicado!");
             clPedidos.show(painelPedidos, "card2");
             painelPedidos.revalidate();
             painelPedidos.repaint();
         });
 
-        // Adicionar listener ao botão "Salvar Pedido"
         painelPedidosForm1.getBtnSalvarPedido().addActionListener(e -> {
-            System.out.println("Botão 'Salvar Pedido' clicado!");
             painelPedidosForm1.salvarPedido();
             painelPedidosLista1.carregarPedidos();
             clPedidos.show(painelPedidos, "card2");
@@ -53,38 +64,29 @@ public class IndexFrame extends javax.swing.JFrame {
             painelPedidos.repaint();
         });
 
-        // Adicionar listener ao botão "Limpar Pedido"
         painelPedidosForm1.getBtnLimparPedido().addActionListener(e -> {
-            System.out.println("Botão 'Limpar Pedido' clicado!");
             painelPedidosForm1.limparCampos();
         });
 
-        // Adicionar listener ao botão "Buscar Pedidos"
         painelPedidosLista1.getBtnBuscaPedidos().addActionListener(e -> {
-            System.out.println("Botão 'Buscar Pedidos' clicado!");
             String termo = painelPedidosLista1.getCampoBuscaPedidos().getText();
             painelPedidosLista1.buscarPedidos(termo);
         });
         
-        // Adicionar listener ao botão "Novo Sapato"
         painelSapatosLista1.getBtnCriarSapato().addActionListener(e -> {
-            System.out.println("Botão 'Novo Sapato' clicado!");
+            painelSapatosForm1.limparCampos();
             clSapatos.show(painelSapatos, "card1");
             painelSapatos.revalidate();
             painelSapatos.repaint();
         });
         
-        // Adicionar listener ao botão "Voltar" do formulário de sapatos
         painelSapatosForm1.getBtnVoltarSapatos().addActionListener(e -> {
-            System.out.println("Botão 'Voltar Sapatos' clicado!");
             clSapatos.show(painelSapatos, "card2");
             painelSapatos.revalidate();
             painelSapatos.repaint();
         });
 
-        // Adicionar listener ao botão "Salvar Sapato"
         painelSapatosForm1.getBtnSalvarSapato().addActionListener(e -> {
-            System.out.println("Botão 'Salvar Sapato' clicado!");
             painelSapatosForm1.salvarSapato();
             painelSapatosLista1.carregarSapatos();
             clSapatos.show(painelSapatos, "card2");
@@ -92,15 +94,11 @@ public class IndexFrame extends javax.swing.JFrame {
             painelSapatos.repaint();
         });
 
-        // Adicionar listener ao botão "Limpar Sapato"
         painelSapatosForm1.getBtnLimparSapato().addActionListener(e -> {
-            System.out.println("Botão 'Limpar Sapato' clicado!");
             painelSapatosForm1.limparCampos();
         });
 
-        // Adicionar listener ao botão "Buscar Sapatos"
         painelSapatosLista1.getBtnBuscarSapato().addActionListener(e -> {
-            System.out.println("Botão 'Buscar Sapatos' clicado!");
             String termo = painelSapatosLista1.getCampoBuscaSapato().getText();
             painelSapatosLista1.buscarSapatos(termo);
         });
@@ -120,29 +118,14 @@ public class IndexFrame extends javax.swing.JFrame {
         painelPedidosForm1 = new gui.PainelPedidosForm();
         painelPedidosLista1 = new gui.PainelPedidosLista();
         painelSapatos = new javax.swing.JPanel();
-        painelSapatosForm1 = new gui.PainelSapatosForm();
-        painelSapatosLista1 = new gui.PainelSapatosLista();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         painelPedidos.setLayout(new java.awt.CardLayout());
 
-        painelPedidosForm1.setPreferredSize(new java.awt.Dimension(881, 446));
-        painelPedidos.add(painelPedidosForm1, "card3");
-
-        painelPedidosLista1.setPreferredSize(new java.awt.Dimension(881, 446));
-        painelPedidos.add(painelPedidosLista1, "card2");
-
         abas.addTab("Pedidos", painelPedidos);
 
         painelSapatos.setLayout(new java.awt.CardLayout());
-
-        painelSapatosForm1.setPreferredSize(new java.awt.Dimension(881, 446));
-        painelSapatos.add(painelSapatosForm1, "card1");
-
-        painelSapatosLista1.setPreferredSize(new java.awt.Dimension(881, 446));
-        painelSapatos.add(painelSapatosLista1, "card2");
-
         abas.addTab("Sapatos", painelSapatos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -153,7 +136,10 @@ public class IndexFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(abas, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(abas, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();

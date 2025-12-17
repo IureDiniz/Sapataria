@@ -73,7 +73,7 @@ public class PedidoDAO {
 				
 				// Recuperar os atributos
 				aux.setPED_CODIGO(rset.getInt("PED_CODIGO"));
-				aux.setPED_CLIENTE(rset.getString("CLIENTE"));
+				aux.setPED_CLIENTE(rset.getString("PED_CLIENTE"));
 				aux.setPED_DATA(rset.getDate("PED_DATA"));
                                 aux.setPED_QUANTIDADE(rset.getInt("PED_QUANTIDADE"));
                                 aux.setPED_PRECO_TOTAL(rset.getDouble("PED_PRECO_TOTAL"));
@@ -156,27 +156,24 @@ public class PedidoDAO {
 	}
 	
     public static void updatePedido(Pedido pedido) {
-		String sql = "UPDATE tbPedido SET PED_CLIENTE = ?, PED_DATA = ?, PED_QUANTIDADE = ?, PED_PRECO_TOTAL = ?, SAP_CODIGO = ?" +
+		String sql = "UPDATE tbPedido SET PED_CLIENTE = ?, PED_DATA = ?, PED_QUANTIDADE = ?, PED_PRECO_TOTAL = ?, SAP_CODIGO = ? " +
 				 "WHERE PED_CODIGO = ?";
 	
 	Connection conn = null;
 	JdbcPreparedStatement pstm = null;
 	
 	try {
-		//Cria conexão
 		conn = ConnectionFactory.createConnectionToMySQL();
 		
-		// Cria classe de execução da query
 		pstm = (JdbcPreparedStatement) conn.prepareStatement(sql);
 		
-		// Adiciona os valores para atualizar
 		pstm.setString(1, pedido.getPED_CLIENTE());
 		pstm.setDate(2, pedido.getPED_DATA());
                 pstm.setInt(3, pedido.getPED_QUANTIDADE());
                 pstm.setDouble(4, pedido.getPED_PRECO_TOTAL());
                 pstm.setInt(5, pedido.getSAP_CODIGO());
+                pstm.setInt(6, pedido.getPED_CODIGO());
 		
-		// Executa a query
 		pstm.execute();
 		
 	} catch(Exception e) {

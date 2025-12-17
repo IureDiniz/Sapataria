@@ -8,12 +8,20 @@ import dao.PedidoDAO;
 import models.Pedido;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import javax.swing.JOptionPane;
+import java.awt.CardLayout;
+import javax.swing.JPanel;
+import dao.SapatoDAO;
+import models.Sapato;
 
 /**
  *
  * @author gerlandoprado
  */
 public class PainelPedidosLista extends javax.swing.JPanel {
+
+    private JPanel painelContainer;
+    private PainelPedidosForm painelForm;
 
     /**
      * Creates new form PainelPedidosLista
@@ -22,21 +30,17 @@ public class PainelPedidosLista extends javax.swing.JPanel {
         initComponents();
         carregarPedidos();
         configurarColunas();
+        configurarBotoesAcao();
     }
 
     private void configurarColunas() {
-        // Cliente (coluna 1) com largura maior
+        tablePedidos.getColumnModel().getColumn(0).setPreferredWidth(40);
         tablePedidos.getColumnModel().getColumn(1).setPreferredWidth(150);
-        // Data (coluna 2)
         tablePedidos.getColumnModel().getColumn(2).setPreferredWidth(80);
-        // Quantidade (coluna 3)
         tablePedidos.getColumnModel().getColumn(3).setPreferredWidth(80);
-        // Preço Total (coluna 4)
         tablePedidos.getColumnModel().getColumn(4).setPreferredWidth(90);
-        // Sapato (coluna 5)
-        tablePedidos.getColumnModel().getColumn(5).setPreferredWidth(80);
-        // Ações (coluna 6)
-        tablePedidos.getColumnModel().getColumn(6).setPreferredWidth(80);
+        tablePedidos.getColumnModel().getColumn(5).setPreferredWidth(150);
+        tablePedidos.getColumnModel().getColumn(6).setPreferredWidth(120);
     }
 
     /**
@@ -195,16 +199,27 @@ public class PainelPedidosLista extends javax.swing.JPanel {
             List<Pedido> pedidos = pedidoDAO.listPedido();
             
             DefaultTableModel model = (DefaultTableModel) tablePedidos.getModel();
-            model.setRowCount(0); // Limpa linhas anteriores
+            model.setRowCount(0);
             
             for (Pedido pedido : pedidos) {
+                String nomeSapato = "";
+                try {
+                    SapatoDAO sapatoDAO = new SapatoDAO();
+                    Sapato sapato = sapatoDAO.getSapato(pedido.getSAP_CODIGO());
+                    if (sapato != null) {
+                        nomeSapato = sapato.getSAP_NOME();
+                    }
+                } catch (Exception e) {
+                    nomeSapato = "N/A";
+                }
+                
                 Object[] row = {
                     pedido.getPED_CODIGO(),
                     pedido.getPED_CLIENTE(),
                     pedido.getPED_DATA(),
                     pedido.getPED_QUANTIDADE(),
                     String.format("%.2f", pedido.getPED_PRECO_TOTAL()),
-                    pedido.getSAP_CODIGO(),
+                    nomeSapato,
                     "Ações"
                 };
                 model.addRow(row);
@@ -232,13 +247,24 @@ public class PainelPedidosLista extends javax.swing.JPanel {
             
             for (Pedido pedido : pedidos) {
                 if (pedido.getPED_CLIENTE().toLowerCase().contains(termo.toLowerCase())) {
+                    String nomeSapato = "";
+                    try {
+                        SapatoDAO sapatoDAO = new SapatoDAO();
+                        Sapato sapato = sapatoDAO.getSapato(pedido.getSAP_CODIGO());
+                        if (sapato != null) {
+                            nomeSapato = sapato.getSAP_NOME();
+                        }
+                    } catch (Exception e) {
+                        nomeSapato = "N/A";
+                    }
+                    
                     Object[] row = {
                         pedido.getPED_CODIGO(),
                         pedido.getPED_CLIENTE(),
                         pedido.getPED_DATA(),
                         pedido.getPED_QUANTIDADE(),
                         String.format("%.2f", pedido.getPED_PRECO_TOTAL()),
-                        pedido.getSAP_CODIGO(),
+                        nomeSapato,
                         "Ações"
                     };
                     model.addRow(row);
@@ -249,6 +275,80 @@ public class PainelPedidosLista extends javax.swing.JPanel {
         } catch (Exception e) {
             System.err.println("Erro ao buscar pedidos: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public void configurarReferencias(JPanel painelContainer, PainelPedidosForm painelForm) {
+        this.painelContainer = painelContainer;
+        this.painelForm = painelForm;
+    }
+
+    private void configurarBotoesAcao() {
+        tablePedidos.getColumnModel().getColumn(6).setCellRenderer(new ActionButtonsRenderer());
+        tablePedidos.getColumnModel().getColumn(6).setCellEditor(new ActionButtonsEditor(
+            tablePedidos,
+            e -> verPedido(Integer.parseInt(e.getActionCommand())),
+            e -> editarPedido(Integer.parseInt(e.getActionCommand())),
+            e -> excluirPedido(Integer.parseInt(e.getActionCommand()))
+        ));
+        tablePedidos.setRowHeight(35);
+    }
+
+    private void verPedido(int row) {
+        int codigo = (int) tablePedidos.getValueAt(row, 0);
+        String cliente = (String) tablePedidos.getValueAt(row, 1);
+        String data = tablePedidos.getValueAt(row, 2).toString();
+        int quantidade = (int) tablePedidos.getValueAt(row, 3);
+        String preco = (String) tablePedidos.getValueAt(row, 4);
+        String nomeSapato = (String) tablePedidos.getValueAt(row, 5);
+        
+        String mensagem = "Código: " + codigo + "\n"
+                        + "Cliente: " + cliente + "\n"
+                        + "Data: " + data + "\n"
+                        + "Quantidade: " + quantidade + "\n"
+                        + "Preço Total: R$ " + preco + "\n"
+                        + "Sapato: " + nomeSapato;
+        
+        JOptionPane.showMessageDialog(this, mensagem, "Detalhes do Pedido", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void editarPedido(int row) {
+        int codigo = (int) tablePedidos.getValueAt(row, 0);
+        
+        if (painelForm != null && painelContainer != null) {
+            painelForm.carregarPedidoParaEdicao(codigo);
+            CardLayout cl = (CardLayout) painelContainer.getLayout();
+            cl.show(painelContainer, "card3");
+            painelContainer.revalidate();
+            painelContainer.repaint();
+        }
+    }
+
+    private void excluirPedido(int row) {
+        int codigo = (int) tablePedidos.getValueAt(row, 0);
+        String cliente = (String) tablePedidos.getValueAt(row, 1);
+        
+        int confirmacao = JOptionPane.showConfirmDialog(
+            this,
+            "Deseja excluir o pedido?\n\nCódigo: " + codigo + "\nCliente: " + cliente,
+            "Confirmar Exclusão",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+        
+        if (confirmacao == JOptionPane.YES_OPTION) {
+            try {
+                PedidoDAO pedidoDAO = new PedidoDAO();
+                Pedido pedido = new Pedido();
+                pedido.setPED_CODIGO(codigo);
+                pedidoDAO.deletePedido(pedido);
+                
+                JOptionPane.showMessageDialog(this, "Pedido excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                carregarPedidos();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao excluir: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
         }
     }
 }

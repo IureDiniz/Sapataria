@@ -8,12 +8,19 @@ import dao.SapatoDAO;
 import models.Sapato;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import javax.swing.JOptionPane;
+import java.awt.CardLayout;
+import javax.swing.JPanel;
 
 /**
  *
  * @author gerlandoprado
  */
 public class PainelSapatosLista extends javax.swing.JPanel {
+
+    private JPanel painelContainer;
+    private PainelSapatosForm painelForm;
+    private javax.swing.JLabel lblSapatos;
 
     /**
      * Creates new form PainelSapatosLista
@@ -22,21 +29,17 @@ public class PainelSapatosLista extends javax.swing.JPanel {
         initComponents();
         carregarSapatos();
         configurarColunas();
+        configurarBotoesAcao();
     }
 
     private void configurarColunas() {
-        // Nome (coluna 1) com largura maior
+        tableSapatos.getColumnModel().getColumn(0).setPreferredWidth(60);
         tableSapatos.getColumnModel().getColumn(1).setPreferredWidth(150);
-        // Fornecedor (coluna 2)
         tableSapatos.getColumnModel().getColumn(2).setPreferredWidth(120);
-        // Preço Compra (coluna 3)
         tableSapatos.getColumnModel().getColumn(3).setPreferredWidth(90);
-        // Preço Venda (coluna 4)
         tableSapatos.getColumnModel().getColumn(4).setPreferredWidth(90);
-        // Quantidade (coluna 5)
         tableSapatos.getColumnModel().getColumn(5).setPreferredWidth(80);
-        // Ações (coluna 6)
-        tableSapatos.getColumnModel().getColumn(6).setPreferredWidth(80);
+        tableSapatos.getColumnModel().getColumn(6).setPreferredWidth(120);
     }
 
     /**
@@ -188,7 +191,6 @@ public class PainelSapatosLista extends javax.swing.JPanel {
     private javax.swing.JTextField campoBuscaSapato;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JLabel lblSapatos;
     private javax.swing.JPanel painelSapatos;
     private javax.swing.JTable tableSapatos;
     // End of variables declaration//GEN-END:variables
@@ -267,6 +269,80 @@ public class PainelSapatosLista extends javax.swing.JPanel {
         } catch (Exception e) {
             System.err.println("Erro ao buscar sapatos: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public void configurarReferencias(JPanel painelContainer, PainelSapatosForm painelForm) {
+        this.painelContainer = painelContainer;
+        this.painelForm = painelForm;
+    }
+
+    private void configurarBotoesAcao() {
+        tableSapatos.getColumnModel().getColumn(6).setCellRenderer(new ActionButtonsRenderer());
+        tableSapatos.getColumnModel().getColumn(6).setCellEditor(new ActionButtonsEditor(
+            tableSapatos,
+            e -> verSapato(Integer.parseInt(e.getActionCommand())),
+            e -> editarSapato(Integer.parseInt(e.getActionCommand())),
+            e -> excluirSapato(Integer.parseInt(e.getActionCommand()))
+        ));
+        tableSapatos.setRowHeight(35);
+    }
+
+    private void verSapato(int row) {
+        int codigo = (int) tableSapatos.getValueAt(row, 0);
+        String nome = (String) tableSapatos.getValueAt(row, 1);
+        String fornecedor = (String) tableSapatos.getValueAt(row, 2);
+        String precoCompra = (String) tableSapatos.getValueAt(row, 3);
+        String precoVenda = (String) tableSapatos.getValueAt(row, 4);
+        int quantidade = (int) tableSapatos.getValueAt(row, 5);
+        
+        String mensagem = "Código: " + codigo + "\n"
+                        + "Nome: " + nome + "\n"
+                        + "Fornecedor: " + fornecedor + "\n"
+                        + "Preço Compra: R$ " + precoCompra + "\n"
+                        + "Preço Venda: R$ " + precoVenda + "\n"
+                        + "Quantidade: " + quantidade;
+        
+        JOptionPane.showMessageDialog(this, mensagem, "Detalhes do Sapato", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void editarSapato(int row) {
+        int codigo = (int) tableSapatos.getValueAt(row, 0);
+        
+        if (painelForm != null && painelContainer != null) {
+            painelForm.carregarSapatoParaEdicao(codigo);
+            CardLayout cl = (CardLayout) painelContainer.getLayout();
+            cl.show(painelContainer, "card1");
+            painelContainer.revalidate();
+            painelContainer.repaint();
+        }
+    }
+
+    private void excluirSapato(int row) {
+        int codigo = (int) tableSapatos.getValueAt(row, 0);
+        String nome = (String) tableSapatos.getValueAt(row, 1);
+        
+        int confirmacao = JOptionPane.showConfirmDialog(
+            this,
+            "Deseja excluir o sapato?\n\nCódigo: " + codigo + "\nNome: " + nome,
+            "Confirmar Exclusão",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+        
+        if (confirmacao == JOptionPane.YES_OPTION) {
+            try {
+                SapatoDAO sapatoDAO = new SapatoDAO();
+                Sapato sapato = new Sapato();
+                sapato.setSAP_CODIGO(codigo);
+                sapatoDAO.deleteSapato(sapato);
+                
+                JOptionPane.showMessageDialog(this, "Sapato excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                carregarSapatos();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao excluir: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
         }
     }
 }

@@ -14,12 +14,15 @@ import java.util.List;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import dao.PedidoDAO;
 
 /**
  *
  * @author gerlandoprado
  */
 public class PainelPedidosForm extends javax.swing.JPanel {
+
+    private Integer pedidoCodigoEdicao = null;
 
     /**
      * Creates new form PainelPedidosForm
@@ -191,7 +194,6 @@ public class PainelPedidosForm extends javax.swing.JPanel {
 
     public void salvarPedido() {
         try {
-            // Validar campos
             if (txtCliente.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Por favor, preencha o nome do cliente!", "Erro", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -213,27 +215,34 @@ public class PainelPedidosForm extends javax.swing.JPanel {
                 return;
             }
 
-            // Criar objeto Pedido
             Pedido pedido = new Pedido();
+            
+            if (pedidoCodigoEdicao != null) {
+                pedido.setPED_CODIGO(pedidoCodigoEdicao);
+            }
+            
             pedido.setPED_CLIENTE(txtCliente.getText());
             
-            // Converter data com múltiplos formatos aceitos
             Date dataPedido = converterData(txtData.getText());
             pedido.setPED_DATA(dataPedido);
             
             pedido.setPED_QUANTIDADE(Integer.parseInt(txtQuantidade.getText()));
-            pedido.setPED_PRECO_TOTAL(Double.parseDouble(txtPrecoTotal.getText()));
+            pedido.setPED_PRECO_TOTAL(Double.parseDouble(txtPrecoTotal.getText().replace(",", ".")));
             
-            // Extrair SAP_CODIGO do combo box (formato: "CODIGO - NOME")
             String selectedItem = (String) cmbSapato.getSelectedItem();
             int sapCodigo = Integer.parseInt(selectedItem.split(" - ")[0]);
             pedido.setSAP_CODIGO(sapCodigo);
 
-            // Salvar no banco
             PedidoDAO pedidoDAO = new PedidoDAO();
-            pedidoDAO.savePedido(pedido);
-
-            JOptionPane.showMessageDialog(this, "Pedido salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            
+            if (pedidoCodigoEdicao != null) {
+                pedidoDAO.updatePedido(pedido);
+                JOptionPane.showMessageDialog(this, "Pedido atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                pedidoDAO.savePedido(pedido);
+                JOptionPane.showMessageDialog(this, "Pedido salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
             limparCampos();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Formato inválido! Verifique quantidade, preço e data (use dd/MM/yyyy).", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -260,6 +269,37 @@ public class PainelPedidosForm extends javax.swing.JPanel {
         txtQuantidade.setText("");
         txtPrecoTotal.setText("");
         cmbSapato.setSelectedIndex(0);
+        pedidoCodigoEdicao = null;
+    }
+
+    public void carregarPedidoParaEdicao(int codigo) {
+        try {
+            PedidoDAO pedidoDAO = new PedidoDAO();
+            Pedido pedido = pedidoDAO.getPedido(codigo);
+            
+            if (pedido != null) {
+                pedidoCodigoEdicao = pedido.getPED_CODIGO();
+                txtCliente.setText(pedido.getPED_CLIENTE());
+                
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate localDate = pedido.getPED_DATA().toLocalDate();
+                txtData.setText(localDate.format(formatter));
+                
+                txtQuantidade.setText(String.valueOf(pedido.getPED_QUANTIDADE()));
+                txtPrecoTotal.setText(String.format("%.2f", pedido.getPED_PRECO_TOTAL()));
+                
+                for (int i = 0; i < cmbSapato.getItemCount(); i++) {
+                    String item = cmbSapato.getItemAt(i);
+                    if (item.startsWith(pedido.getSAP_CODIGO() + " - ")) {
+                        cmbSapato.setSelectedIndex(i);
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar pedido: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     public void carregarSapatos() {

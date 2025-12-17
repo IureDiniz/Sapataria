@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
  */
 public class PainelSapatosForm extends javax.swing.JPanel {
 
+    private Integer sapatoCodigoEdicao = null;
+
     /**
      * Creates new form PainelSapatosForm
      */
@@ -174,7 +176,6 @@ public class PainelSapatosForm extends javax.swing.JPanel {
 
     public void salvarSapato() {
         try {
-            // Validar campos
             if (txtNome.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Por favor, preencha o nome do sapato!", "Erro", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -196,19 +197,28 @@ public class PainelSapatosForm extends javax.swing.JPanel {
                 return;
             }
 
-            // Criar objeto Sapato
             Sapato sapato = new Sapato();
+            
+            if (sapatoCodigoEdicao != null) {
+                sapato.setSAP_CODIGO(sapatoCodigoEdicao);
+            }
+            
             sapato.setSAP_NOME(txtNome.getText());
             sapato.setSAP_FORNECEDOR(txtFornecedor.getText());
-            sapato.setSAP_PRECO_COMPRA(Double.parseDouble(txtPrecoCompra.getText()));
-            sapato.setSAP_PRECO_VENDA(Double.parseDouble(txtPrecoVenda.getText()));
+            sapato.setSAP_PRECO_COMPRA(Double.parseDouble(txtPrecoCompra.getText().replace(",", ".")));
+            sapato.setSAP_PRECO_VENDA(Double.parseDouble(txtPrecoVenda.getText().replace(",", ".")));
             sapato.setSAP_QUANTIDADE(Integer.parseInt(txtQuantidade.getText()));
 
-            // Salvar no banco
             SapatoDAO sapatoDAO = new SapatoDAO();
-            sapatoDAO.saveSapato(sapato);
-
-            JOptionPane.showMessageDialog(this, "Sapato salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            
+            if (sapatoCodigoEdicao != null) {
+                sapatoDAO.updateSapato(sapato);
+                JOptionPane.showMessageDialog(this, "Sapato atualizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                sapatoDAO.saveSapato(sapato);
+                JOptionPane.showMessageDialog(this, "Sapato salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
             limparCampos();
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Formato inválido! Verifique preços e quantidade.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -224,5 +234,25 @@ public class PainelSapatosForm extends javax.swing.JPanel {
         txtPrecoCompra.setText("");
         txtPrecoVenda.setText("");
         txtQuantidade.setText("");
+        sapatoCodigoEdicao = null;
+    }
+
+    public void carregarSapatoParaEdicao(int codigo) {
+        try {
+            SapatoDAO sapatoDAO = new SapatoDAO();
+            Sapato sapato = sapatoDAO.getSapato(codigo);
+            
+            if (sapato != null) {
+                sapatoCodigoEdicao = sapato.getSAP_CODIGO();
+                txtNome.setText(sapato.getSAP_NOME());
+                txtFornecedor.setText(sapato.getSAP_FORNECEDOR());
+                txtPrecoCompra.setText(String.format("%.2f", sapato.getSAP_PRECO_COMPRA()));
+                txtPrecoVenda.setText(String.format("%.2f", sapato.getSAP_PRECO_VENDA()));
+                txtQuantidade.setText(String.valueOf(sapato.getSAP_QUANTIDADE()));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar sapato: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 }

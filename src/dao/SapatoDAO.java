@@ -248,14 +248,12 @@ public class SapatoDAO {
 				sapato.setSAP_CODIGO(rset.getInt("SAP_CODIGO"));
 				sapato.setSAP_NOME(rset.getString("SAP_NOME"));
 				sapato.setSAP_FORNECEDOR(rset.getString("SAP_FORNECEDOR"));
-				sapato.setSAP_PRECO_COMPRA(rset.getDouble("SAP_PRECO_COMOPRA"));
+				sapato.setSAP_PRECO_COMPRA(rset.getDouble("SAP_PRECO_COMPRA"));
 				sapato.setSAP_PRECO_VENDA(rset.getDouble("SAP_PRECO_VENDA"));
 				sapato.setSAP_QUANTIDADE(rset.getInt("SAP_QUANTIDADE"));
-                                
+				
 				sapatos.add(sapato);
 			}
-			
-			pstm.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
