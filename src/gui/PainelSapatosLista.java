@@ -126,6 +126,10 @@ public class PainelSapatosLista extends javax.swing.JPanel {
                 "Código", "Nome", "Fornecedor", "Preço de compra", "Preço de venda", "Quantidade", "Ações"
             }
         ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
             };
